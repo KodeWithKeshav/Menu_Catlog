@@ -66,6 +66,10 @@ app.get('/menucontrol', authenticate, (req, res) => {
 app.get('/viewmenu', authenticate, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'menuview.html'));
 });
+app.get('/manageitems', authenticate, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'manageitem.html'));
+});
+
 // User login route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -144,5 +148,27 @@ app.post('/add', async (req, res) => {
   await item.save();
   res.json({ success: true });
 });
+// Update an item (name or price)
+app.put('/update/:id', async (req, res) => {
+  const { name, price } = req.body;
+  try {
+    const updatedItem = await MenuItem.findByIdAndUpdate(req.params.id, { name, price }, { new: true });
+    res.json({ success: true, item: updatedItem });
+  } catch (err) {
+    console.error('Error updating item:', err);
+    res.status(500).json({ success: false });
+  }
+});
+// Delete an item
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    await MenuItem.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting item:', err);
+    res.status(500).json({ success: false });
+  }
+});
+
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

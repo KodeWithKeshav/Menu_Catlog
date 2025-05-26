@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Menu Management</title>
+  <style>
+    body {
+  font-family: sans-serif;
+  background: #f7f7f7;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+select, input, button {
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
+
+table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+button {
+  cursor: pointer;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Manage Menu Items</h1>
+    
+    <!-- Canteen selector -->
+    <select id="canteenSelect">
+      <option value="" disabled selected>Select Canteen</option>
+      <option value="IT">IT Canteen</option>
+      <option value="MBA">MBA Canteen</option>
+      <option value="Main">Main Canteen</option>
+    </select>
+
+    <!-- Add new item form -->
+    <form id="addItemForm">
+      <input type="text" id="itemName" placeholder="Item Name" required>
+      <input type="number" id="itemPrice" placeholder="Price" required>
+      <button type="submit">Add Item</button>
+    </form>
+
+    <!-- Table of items -->
+    <table id="menuTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+ <script>
+const canteenSelect = document.getElementById('canteenSelect');
+const addItemForm = document.getElementById('addItemForm');
+const menuTableBody = document.querySelector('#menuTable tbody');
+
+let currentCanteen = '';
+
+canteenSelect.addEventListener('change', () => {
+  currentCanteen = canteenSelect.value;
+  fetchMenuItems();
+});
+
+addItemForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('itemName').value;
+  const price = document.getElementById('itemPrice').value;
+
+  await fetch('/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, price, canteen: currentCanteen })
+  });
+
+  addItemForm.reset();
+  fetchMenuItems();
+});
+
+async function fetchMenuItems() {
+  const res = await fetch(`/admin/${currentCanteen}`);
+  const items = await res.json();
+
+  menuTableBody.innerHTML = '';
+  items.forEach(item => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input value="${item.name}" data-id="${item._id}" class="edit-name" /></td>
+      <td><input type="number" value="${item.price}" data-id="${item._id}" class="edit-price" /></td>
+      <td>
+        <button onclick="deleteItem('${item._id}')">Delete</button>
+        <button onclick="updateItem('${item._id}')">Save</button>
+      </td>
+    `;
+    menuTableBody.appendChild(row);
+  });
+}
+
+async function deleteItem(id) {
+  await fetch(`/delete/${id}`, { method: 'DELETE' });
+  fetchMenuItems();
+}
+
+async function updateItem(id) {
+  const nameInput = document.querySelector(`.edit-name[data-id="${id}"]`);
+  const priceInput = document.querySelector(`.edit-price[data-id="${id}"]`);
+
+  await fetch(`/update/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: nameInput.value,
+      price: priceInput.value
+    })
+  });
+
+  fetchMenuItems();
+}
+</script>
+
+</body>
+</html>
