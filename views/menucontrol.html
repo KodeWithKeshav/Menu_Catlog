@@ -1,81 +1,608 @@
+<!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="Author" content="Keshav S">
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="Author" content="Keshav S" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <title>Admin Menu Toggle</title>
+  <style>
+    :root {
+      --bg-color: #0A0A0F;
+      --text-color: #E0E0E0;
+      --card-bg: rgba(20, 20, 30, 0.9);
+      --nav-bg: rgba(10, 10, 15, 0.9);
+      --input-bg: rgba(40, 40, 50, 0.8);
+       --gradient: linear-gradient(135deg, #4c0fbc , #6c37ac);
+      --gradient1: linear-gradient(235deg, #5322ad , #8145cb);
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      --border: rgba(107, 52, 245, 0.2);
+}
+.light-mode {
+            --bg-color: #F5F6FA;
+            --text-color:#333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --nav-bg: rgba(245, 246, 250, 0.9);
+            --input-bg: rgba(240, 240, 245, 0.8);
+            --table-cell-bg: rgba(230, 230, 235, 0.8);
+           --gradient: linear-gradient(135deg, #e1622f , #e5197f);
+            --gradient1: linear-gradient(235deg, #e86835 , #ce2278);
+            --gradient-start: #FF758C;
+            --gradient-end: #FCD968;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --border: rgba(228, 55, 55, 0.2);
+            --accent-color: #FF758C;
+        }
+body {
+font-family: 'Segoe UI', sans-serif;
+margin: 0;
+padding: 0;
+background: var(--bg-color);
+color: var(--text-color);
+overflow-x: hidden;
+position: relative;
+transition: background 0.3s, color 0.3s;
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+#particles {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+z-index: -1;
+}
+.navbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: var(--nav-bg);
+padding: 20px 40px;
+box-shadow: var(--shadow);
+position: sticky;
+top: 0;
+z-index: 1000;
+backdrop-filter: blur(10px);
+transition: background 0.3s, box-shadow 0.3s;
+}
+.nav-links {
+list-style: none;
+display: flex;
+align-items: center;
+}
+.nav-links li {
+margin: 0 20px;
+}
+.nav-links a {
+color: var(--text-color);
+text-decoration: none;
+font-weight: 600;
+font-size: 16px;
+transition: color 0.3s, transform 0.3s;
+}
+.nav-links a:hover {
+color: #6B34F5;
+transform: translateY(-2px);
+}
+.hamburger {
+display: none;
+font-size: 28px;
+color: var(--text-color);
+cursor: pointer;
+transition: color 0.3s;
+}
+@media (max-width: 768px) {
+.nav-links {
+ display: none;
+ flex-direction: column;
+ background: var(--nav-bg);
+ position: absolute;
+ top: 80px;
+ left: 0;
+ width: 100%;
+ text-align: center;
+ padding: 20px 0;
+ transition: background 0.3s;
+}
+.nav-links.active {
+ display: flex;
+}
+.hamburger {
+ display: block;
+}
+.nav-links li{
+ margin-bottom: 10px;
+}
+}
+#logo {
+height: 60px;
+filter: brightness(1.2);
+}
+#logout-btn {
+background: var(--gradient);
+color: #fff;
+border: none;
+padding: 12px 24px;
+font-size: 14px;
+font-weight: 600;
+border-radius: 25px;
+cursor: pointer;
+transition: transform 0.3s, box-shadow 0.3s;
+box-shadow: 0 4px 15px rgba(107, 52, 245, 0.4);
+}
+#logout-btn:hover {
+transform: scale(1.05);
+box-shadow: 0 6px 20px rgba(107, 52, 245, 0.6);
+}
+#logout-btn:active {
+background: #4a20b3;
+transform: scale(0.98);
+}
+nav ul li .dropdown-content {
+display: none;
+position: absolute;
+background-color: #f9f9f9;
+min-width: 160px;
+box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+z-index: 1;
+left: 0;
+top: 100%;
+margin-top: 10px;
+}
+nav ul li {
+position: relative;
+}
+
+ nav ul li .dropdown-content a {
+     color: black;
+     padding: 12px 16px;
+     text-decoration: none;
+     display: block;
+     text-align: left;
+ }
+ nav ul li .dropdown-content a:hover {
+     background-color: #ddd;
+ }
+ nav ul li:hover .dropdown-content {
+     display: block;
+ }
+ nav ul li.show .dropdown-content {
+display: block;
+}
+    select, input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+      cursor: pointer;
+       border: 2px solid var(--border);
+             background: var(--input-bg);
+      color: var(--text-color);
+      transition: border-color 0.3s, background 0.3s, color 0.3s;
+    }
+
+    #adminMenu {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      color:#4a20b3;
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    .light-mode .card{
+      color: #ce2278;
+    }
+    .en button{
+      padding: 12px 18px;
+      background: var(--gradient);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(107, 52, 245, 0.4);
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    .card h4 {
+      margin: 0 0 1rem 0;
+      font-size: 1.1rem;
+    }
+
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider1 {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      border-radius: 20px;
+      transition: 0.4s;
+    }
+
+    .slider1:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+
+    input:checked + .slider1 {
+      background-color: #4caf50;
+    }
+
+    input:checked + .slider1:before {
+      transform: translateX(20px);
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .light-mode .slider {
+            transform: translateX(30px);
+        }
+        .mode-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--gradient);
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        h1 {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--text-color);
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: color 0.3s;
+    }
+    @media (max-width: 768px) {
+      select{
+        margin-left: 30%;
+      }
+      input{
+        margin-right: 0;
+        width: 155px;
+      }
+      .en button{
+        width: 90px;
+      }
+    }
+        @media (max-width: 600px) {
+      select{
+        margin-left: 30%;
+      }
+      input{
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
 <body>
-<select id="adminCanteenSelect">
-  <option value="IT">IT Canteen</option>
-  <option value="MBA">MBA Canteen</option>
-  <option value="Main">Main Canteen</option>
-</select>
+  <canvas id="particles"></canvas>
+    <nav class="navbar">
+      <img src="/images/logo.png" id="logo">
+      <ul class="nav-links">
+        <!-- <li class="dropdown">
+            <a href="#" class="dropbtn">Attendance</a>
+            <div class="dropdown-content">
+                <a href="/viewatten">View Attendance</a>
+                <a href="/markatten">Mark Attendance</a>
+            </div>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropbtn">Operations</a>
+            <div class="dropdown-content">
+                <a href="/managebus">Manage Bus</a>
+                <a href="/managestu">Manage Students</a>
+                <a href="/manageusers">Manage Users</a>
+                <a href="/excel">Upload/Download</a>
+            </div>
+        </li> -->
+          <li class="dropdown">
+            <a href="/homepage">Home</a>
+          </li>
+        <li><button id="logout-btn">Logout</button></li>
+        <li><div class="mode-toggle" id="mode-toggle"><div class="slider">🌙</div></div></li>
+      </ul>
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </nav>     
 
-<div id="adminMenu" style="margin-top: 1rem;"></div>
+  <h1>Admin Menu Control</h1>
 
-<script>
-async function loadAdminItems(canteen) {
-  const res = await fetch(`/admin/${canteen}`);
-  const data = await res.json();
-  const container = document.getElementById('adminMenu');
-  container.innerHTML = '';
+  <div id="controls">
+    <select id="adminCanteenSelect">
+      <option value="IT">IT Canteen</option>
+      <option value="MBA">MBA Canteen</option>
+      <option value="Main">Main Canteen</option>
+    </select>
 
-  data.forEach(item => {
-    const div = document.createElement('div');
-    div.style.border = '1px solid #ccc';
-    div.style.margin = '8px';
-    div.style.padding = '10px';
-    div.style.borderRadius = '8px';
-    div.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-    div.innerHTML = `
-      <h4>${item.name} - ₹${item.price}</h4>
-      <label>
-        Show on Menu: 
-        <input type="checkbox" id="avail-${item._id}" ${item.isAvailable ? 'checked' : ''}>
-      </label>
-      <label style="margin-left: 15px;">
-        Today's Special: 
-        <input type="checkbox" id="special-${item._id}" ${item.isSpecialToday ? 'checked' : ''}>
-      </label>
-    `;
+    <input type="text" id="searchInput" placeholder="Search items..." />
+    <div class="en">
+    <button onclick="toggleAll('avail', true)">Enable All</button>
+    <button onclick="toggleAll('avail', false)">Disable All</button>
+    </div>
+  </div>
 
-    // Attach event listeners
-    setTimeout(() => {
-      document.getElementById(`avail-${item._id}`).addEventListener('change', () => {
-        const updatedAvailable = document.getElementById(`avail-${item._id}`).checked;
-        const updatedSpecial = document.getElementById(`special-${item._id}`).checked;
-        toggleItem(item._id, updatedAvailable, updatedSpecial);
-      });
+  <div id="adminMenu"></div>
 
-      document.getElementById(`special-${item._id}`).addEventListener('change', () => {
-        const updatedAvailable = document.getElementById(`avail-${item._id}`).checked;
-        const updatedSpecial = document.getElementById(`special-${item._id}`).checked;
-        toggleItem(item._id, updatedAvailable, updatedSpecial);
-      });
-    }, 0);
+  <script>
+    const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particlesArray = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+               ctx.fillStyle = document.body.classList.contains('light-mode') ? `rgb(225, 98, 47, ${this.opacity})` : `rgb(83, 34, 173, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        for (let i = 0; i < 100; i++) particlesArray.push(new Particle());
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
-    container.appendChild(div);
-  });
-}
+        // Mode Toggle
+        const modeToggle = document.getElementById('mode-toggle');
+        const slider = modeToggle.querySelector('.slider');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            slider.textContent = '☀️';
+        }
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            slider.textContent = isLight ? '☀️' : '🌙';
+        });
 
-async function toggleItem(id, isAvailable, isSpecialToday) {
-  const res = await fetch('/toggle', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, isAvailable, isSpecialToday })
-  });
+        // GSAP Animations
+        gsap.from('nav', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' });
+        gsap.from('.container > div', { duration: 1, opacity: 0, y: 50, stagger: 0.2, ease: 'power3.out', delay: 0.2 });
 
-  const { success } = await res.json();
-  if (!success) {
-    alert('❌ Failed to update item status');
-  }
-}
-
-document.getElementById('adminCanteenSelect').addEventListener('change', (e) => {
-  loadAdminItems(e.target.value);
+        // Logout functionality
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.addEventListener('click', () => {
+    // Clear cookies
+    document.cookie = 'userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    localStorage.removeItem('email');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('type');
+    history.replaceState(null, null, "/");
+    // Redirect to LoginPage
+    window.location.href = '/';
 });
+    let allItems = [];
 
-// Initial load
-loadAdminItems('IT');
-</script>
+    document.getElementById('adminCanteenSelect').addEventListener('change', (e) => {
+      loadAdminItems(e.target.value);
+    });
+
+    document.getElementById('searchInput').addEventListener('input', () => {
+      displayItems(document.getElementById('searchInput').value.toLowerCase());
+    });
+
+    async function loadAdminItems(canteen) {
+      const res = await fetch(`/admin/${canteen}`);
+      allItems = await res.json();
+      displayItems(document.getElementById('searchInput').value.toLowerCase());
+    }
+
+    function displayItems(filterText = '') {
+      const container = document.getElementById('adminMenu');
+      container.innerHTML = '';
+
+      const filtered = allItems.filter(item =>
+        item.name.toLowerCase().includes(filterText)
+      );
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        card.innerHTML = `
+          <h4>${item.name} - ₹${item.price}</h4>
+          <div class="toggle-group">
+            <label class="toggle-label">
+              Show on Menu:
+              <label class="switch">
+                <input type="checkbox" id="avail-${item._id}" ${item.isAvailable ? 'checked' : ''}>
+                <span class="slider1"></span>
+              </label>
+            </label>
+          </div>
+          <div class="toggle-group">
+            <label class="toggle-label">
+              Today's Special:
+              <label class="switch">
+                <input type="checkbox" id="special-${item._id}" ${item.isSpecialToday ? 'checked' : ''}>
+                <span class="slider1"></span>
+              </label>
+            </label>
+          </div>
+        `;
+
+        container.appendChild(card);
+
+        // Attach event listeners
+        setTimeout(() => {
+          document.getElementById(`avail-${item._id}`).addEventListener('change', () => {
+            toggleItem(item._id,
+              document.getElementById(`avail-${item._id}`).checked,
+              document.getElementById(`special-${item._id}`).checked
+            );
+          });
+
+          document.getElementById(`special-${item._id}`).addEventListener('change', () => {
+            toggleItem(item._id,
+              document.getElementById(`avail-${item._id}`).checked,
+              document.getElementById(`special-${item._id}`).checked
+            );
+          });
+        }, 0);
+      });
+    }
+
+    async function toggleItem(id, isAvailable, isSpecialToday) {
+      const res = await fetch('/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, isAvailable, isSpecialToday })
+      });
+
+      const { success } = await res.json();
+      if (!success) {
+        alert('❌ Failed to update item status');
+      }
+    }
+
+    function toggleAll(type, enable = true) {
+      const prefix = type === 'avail' ? 'avail-' : 'special-';
+      allItems.forEach(item => {
+        const input = document.getElementById(`${prefix}${item._id}`);
+        if (input) {
+          input.checked = enable;
+          toggleItem(
+            item._id,
+            document.getElementById(`avail-${item._id}`).checked,
+            document.getElementById(`special-${item._id}`).checked
+          );
+        }
+      });
+    }
+
+    // Initial load
+    loadAdminItems('IT');
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.classList.toggle('active');
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    dropdowns.forEach(dropdown => {
+      const button = dropdown.querySelector('.dropbtn');
+
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        dropdowns.forEach(d => {
+          if (d !== dropdown) d.classList.remove('show');
+        });
+
+        dropdown.classList.toggle('show');
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+    });
+  });
+  </script>
+
 </body>
 </html>
