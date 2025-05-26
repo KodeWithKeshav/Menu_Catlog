@@ -1,0 +1,50 @@
+<html lang="en-US">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="Author" content="Keshav S">
+    </head>
+<body>
+<form id="addItemForm">
+  <input name="name" placeholder="Item Name" required>
+  <input name="price" placeholder="Price" type="number" required>
+  <select name="canteen" required>
+    <option value="" disabled selected>Select Canteen</option>
+    <option value="IT">IT</option>
+    <option value="MBA">MBA</option>
+    <option value="Main">Main</option>
+  </select>
+  <button type="submit">Add Item</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+document.getElementById('addItemForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  data.price = Number(data.price); // ensure price is number
+
+  try {
+    const res = await fetch('/add', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      document.getElementById('message').textContent = '✅ Item added successfully!';
+      e.target.reset(); // clear form
+    } else {
+      document.getElementById('message').textContent = '❌ Failed to add item.';
+    }
+  } catch (err) {
+    document.getElementById('message').textContent = '⚠️ Error occurred. Try again.';
+    console.error(err);
+  }
+});
+</script>
+</body>
+</html>

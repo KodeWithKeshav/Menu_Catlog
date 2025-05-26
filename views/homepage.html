@@ -25,20 +25,20 @@ if (email) {
 if (!localStorage.getItem("email")) {
     window.location.href = "/";
     }    
-  document.addEventListener('DOMContentLoaded', function () {
-    const type = getCookie("userType");
-    if (type) {
-      localStorage.setItem("type", type);
-    }
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   const type = getCookie("userType");
+  //   if (type) {
+  //     localStorage.setItem("type", type);
+  //   }
 
-    // ✅ Hide admin menu if not admin
-    if (localStorage.getItem("type") !== "admin") {
-      const adminMenu = document.getElementById("adminMenu");
-      if (adminMenu) {
-        adminMenu.style.display = "none";
-      }
-    }
-  });
+  //   // ✅ Hide admin menu if not admin
+  //   if (localStorage.getItem("type") !== "admin") {
+  //     const adminMenu = document.getElementById("adminMenu");
+  //     if (adminMenu) {
+  //       adminMenu.style.display = "none";
+  //     }
+  //   }
+  // });
 </script>
     <style>
         .container {
@@ -391,15 +391,15 @@ color: var(--quotatext1);padding-bottom: 15px;
     <nav class="navbar">
       <img src="/images/logo.png" id="logo">
       <ul class="nav-links">
-        <li class="dropdown">
+        <!-- <li class="dropdown">
             <a href="#" class="dropbtn">Attendance</a>
             <div class="dropdown-content">
                 <a href="/viewatten">View Attendance</a>
                 <a href="/markatten">Mark Attendance</a>
             </div>
-        </li>
+        </li> -->
         <!-- <div id="adminMenu"> -->
-        <li class="dropdown" id="adminMenu">
+        <!-- <li class="dropdown" id="adminMenu">
             <a href="#" class="dropbtn" >Operations</a>
             <div class="dropdown-content">
                 <a href="/managebus">Manage Bus</a>
@@ -407,7 +407,7 @@ color: var(--quotatext1);padding-bottom: 15px;
                 <a href="/manageusers">Manage Users</a>
                 <a href="/excel">Upload/Download</a>
             </div>
-        </li>
+        </li> -->
         <!-- </div> -->
         <li><button id="logout-btn">Logout</button></li>
         <li><div class="mode-toggle" id="mode-toggle"><div class="slider">🌙</div></div></li>
