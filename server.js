@@ -39,7 +39,12 @@ const MenuItemSchema = new mongoose.Schema({
     enum: ['IT', 'MBA', 'Main']
   },
   isAvailable: { type: Boolean, default: false },
-  isSpecialToday: { type: Boolean, default: false }
+  isSpecialToday: { type: Boolean, default: false },
+  type: {
+    type: String,
+    enum: ['veg', 'nonveg'],
+    required: true
+  }
 });
 const User = mongoose.model('User', userSchema);
 const MenuItem =  mongoose.model('MenuItem', MenuItemSchema);
@@ -143,22 +148,38 @@ app.post('/toggle', async (req, res) => {
 
 // Add a new item
 app.post('/add', async (req, res) => {
-  const { name, price, canteen } = req.body;
-  const item = new MenuItem({ name, price, canteen });
+  const { name, price, canteen, type } = req.body;
+
+  if (!['veg', 'nonveg'].includes(type)) {
+    return res.status(400).json({ success: false, message: 'Invalid type. Must be "veg" or "nonveg".' });
+  }
+
+  const item = new MenuItem({ name, price, canteen, type });
   await item.save();
   res.json({ success: true });
 });
+
 // Update an item (name or price)
 app.put('/update/:id', async (req, res) => {
-  const { name, price } = req.body;
+  const { name, price, type } = req.body;
+
+  if (type && !['veg', 'nonveg'].includes(type)) {
+    return res.status(400).json({ success: false, message: 'Invalid type. Must be "veg" or "nonveg".' });
+  }
+
   try {
-    const updatedItem = await MenuItem.findByIdAndUpdate(req.params.id, { name, price }, { new: true });
+    const updatedItem = await MenuItem.findByIdAndUpdate(
+      req.params.id,
+      { name, price, ...(type && { type }) },
+      { new: true }
+    );
     res.json({ success: true, item: updatedItem });
   } catch (err) {
     console.error('Error updating item:', err);
     res.status(500).json({ success: false });
   }
 });
+
 // Delete an item
 app.delete('/delete/:id', async (req, res) => {
   try {

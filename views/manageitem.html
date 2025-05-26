@@ -283,7 +283,7 @@ h1 {
             margin-bottom: 20px;
       border: 2px dashed var(--border);
       border-radius: 8px;
-      width: 100%;
+      width: 20%;
       text-align: center;
       font-size: 14px;
       cursor: pointer;
@@ -291,7 +291,7 @@ h1 {
       color: var(--text-color);
       transition: border-color 0.3s, background 0.3s, color 0.3s;
         }
-    .table-container input{
+    .table-container input,.table-container select{
         padding: 12px;
             margin-top: 20px;
             margin-bottom: 20px;
@@ -333,6 +333,7 @@ h1 {
       color: var(--text-color);
       transition: border-color 0.3s, background 0.3s, color 0.3s;
     }
+
         .container button {
             padding: 12px 18px;
       background: var(--gradient);
@@ -342,7 +343,7 @@ h1 {
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      width: 100%;
+      width: 100px;
       transition: transform 0.3s, box-shadow 0.3s;
       box-shadow: 0 4px 15px rgba(107, 52, 245, 0.4);
       margin-top: 15px;
@@ -366,14 +367,20 @@ h1 {
             button {
         font-size: 13px;
       }
+      .container input{
+        width: 300px;
+      }
       #searchInput{
         min-width: 200px;
       }
       .container select{
         min-width: 200px;
       }
+            .container input{
+        width: 300px;
+      }
         }
-     
+      
   </style>
 </head>
 <body>
@@ -418,6 +425,10 @@ h1 {
     <form id="addItemForm">
       <input type="text" id="itemName" placeholder="Item Name" required>
       <input type="number" id="itemPrice" placeholder="Price" required min="0">
+<select id="itemType" required>
+  <option value="veg">Veg</option>
+  <option value="nonveg">Non-Veg</option>
+</select>
       <button type="submit">Add Item</button><br>
     </form>
   </div>
@@ -428,6 +439,7 @@ h1 {
         <tr>
           <th>Item</th>
           <th>Price</th>
+          <th>Type</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -528,11 +540,12 @@ addItemForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('itemName').value;
   const price = document.getElementById('itemPrice').value;
+  const type = document.getElementById('itemType').value;
 
   await fetch('/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, price, canteen: currentCanteen })
+    body: JSON.stringify({ name, price, canteen: currentCanteen, type })
   });
 
   addItemForm.reset();
@@ -561,8 +574,14 @@ function displayItems(searchQuery) {
       <td><input value="${item.name}" data-id="${item._id}" class="edit-name" /></td>
       <td><input type="number" value="${item.price}" data-id="${item._id}" class="edit-price" /></td>
       <td>
+        <select class="edit-type" data-id="${item._id}">
+          <option value="veg" ${item.type === 'veg' ? 'selected' : ''}>Veg</option>
+          <option value="nonveg" ${item.type === 'nonveg' ? 'selected' : ''}>Non-Veg</option>
+        </select>
+      </td>
+      <td>
         <button onclick="deleteItem('${item._id}')" style="background: linear-gradient(135deg, #dc3545, #a71d2a); border: none; padding: 8px 16px; border-radius: 20px; color: #fff; cursor: pointer; transition: transform 0.3s;margin-bottom:4px">Delete</button>
-        <button onclick="updateItem('${item._id}')" style=" background: var(--gradient);border: none; padding: 8px 16px; border-radius: 20px; color: #fff; cursor: pointer; transition: transform 0.3s;">Save</button>
+        <button onclick="updateItem('${item._id}')" style="background: var(--gradient); border: none; padding: 8px 16px; border-radius: 20px; color: #fff; cursor: pointer; transition: transform 0.3s;">Save</button>
       </td>
     `;
     menuTableBody.appendChild(row);
@@ -577,13 +596,15 @@ async function deleteItem(id) {
 async function updateItem(id) {
   const nameInput = document.querySelector(`.edit-name[data-id="${id}"]`);
   const priceInput = document.querySelector(`.edit-price[data-id="${id}"]`);
+  const typeInput = document.querySelector(`.edit-type[data-id="${id}"]`);
 
   await fetch(`/update/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       name: nameInput.value,
-      price: priceInput.value
+      price: priceInput.value,
+      type: typeInput.value
     })
   });
 

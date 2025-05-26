@@ -7,30 +7,33 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f5f7fa;
+      background: #f0f2f5;
       margin: 0;
       padding: 0;
     }
 
     h1 {
       text-align: center;
-      padding-top: 1rem;
-      color: #2c3e50;
+      padding: 1rem;
+      color: #34495e;
+      font-size: 2rem;
     }
 
     .controls {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
       gap: 1rem;
       padding: 1rem;
     }
 
     select, input[type="text"] {
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
       font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid #ccc;
+      background: #fff;
     }
 
     #menuContainer {
@@ -38,32 +41,43 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 1.5rem;
-      padding: 1rem;
+      padding: 1.5rem;
     }
 
     .menu-card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 1rem;
-      width: 240px;
-      border: 2px solid #e0e0e0;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      padding: 1.2rem;
+      width: 260px;
+      border: 1.5px solid #e0e0e0;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      transition: transform 0.2s ease;
+      gap: 0.7rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .menu-card:hover {
-      transform: scale(1.02);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
 
     .special-border {
-      border-color: #ffd700 !important;
+      border-color: #f39c12 !important;
     }
 
     .veg-tag {
       font-size: 1.2rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .veg-tag.veg {
+      color: #27ae60;
+    }
+
+    .veg-tag.nonveg {
+      color: #c0392b;
     }
 
     .item-name {
@@ -76,6 +90,18 @@
       font-size: 1.2rem;
       text-align: center;
       padding: 2rem;
+      color: #777;
+    }
+
+    .price {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .special-label {
+      color: #e67e22;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -113,22 +139,19 @@
       }
 
       data.forEach(item => {
-        const nameLower = item.name.toLowerCase();
-        const isNonVeg = nameLower.includes('chicken') || nameLower.includes('egg') || nameLower.includes('fish') || nameLower.includes('omlette');
-        const vegNonvegTag = isNonVeg
-          ? '<span title="Non-Veg" class="veg-tag">🔴</span>'
-          : '<span title="Veg" class="veg-tag">🟢</span>';
+        const typeClass = item.type === 'nonveg' ? 'nonveg' : 'veg';
+        const vegNonvegTag = `<span title="${item.type === 'nonveg' ? 'Non-Veg' : 'Veg'}" class="veg-tag ${typeClass}">${item.type === 'nonveg' ? '🍖' : '🥬'}</span>`;
 
         const card = document.createElement('div');
         card.className = 'menu-card' + (item.isSpecialToday ? ' special-border' : '');
 
         card.innerHTML = `
           <div class="item-name">
-            <h3 style="margin: 0;">${item.name}</h3>
+            <h3 style="margin: 0; font-size: 1.2rem;">${item.name}</h3>
             ${vegNonvegTag}
           </div>
-          <p style="margin: 0; font-weight: bold;">₹${item.price}</p>
-          ${item.isSpecialToday ? '<span style="color: #d35400; font-weight: bold;">🌟 Today\'s Special</span>' : ''}
+          <p class="price">₹${item.price}</p>
+          ${item.isSpecialToday ? '<span class="special-label">🌟 Today\'s Special</span>' : ''}
         `;
 
         container.appendChild(card);
