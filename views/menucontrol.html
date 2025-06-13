@@ -6,6 +6,11 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+       if (!localStorage.getItem("email")) {
+            window.location.href = "/";
+        }  
+    </script>
   <title>Admin Menu Toggle</title>
   <style>
     :root {
@@ -353,22 +358,13 @@ display: block;
     <nav class="navbar">
       <img src="/images/logo.png" id="logo">
       <ul class="nav-links">
-        <!-- <li class="dropdown">
-            <a href="#" class="dropbtn">Attendance</a>
+         <li class="dropdown">
+            <a href="#" class="dropbtn">Control</a>
             <div class="dropdown-content">
-                <a href="/viewatten">View Attendance</a>
-                <a href="/markatten">Mark Attendance</a>
+                <a href="/manageitems">Manage Item</a>
+                <a href="/menucontrol">Menu Control</a>
             </div>
         </li>
-        <li class="dropdown">
-            <a href="#" class="dropbtn">Operations</a>
-            <div class="dropdown-content">
-                <a href="/managebus">Manage Bus</a>
-                <a href="/managestu">Manage Students</a>
-                <a href="/manageusers">Manage Users</a>
-                <a href="/excel">Upload/Download</a>
-            </div>
-        </li> -->
           <li class="dropdown">
             <a href="/homepage">Home</a>
           </li>

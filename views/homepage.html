@@ -25,20 +25,6 @@ if (email) {
 if (!localStorage.getItem("email")) {
     window.location.href = "/";
     }    
-  // document.addEventListener('DOMContentLoaded', function () {
-  //   const type = getCookie("userType");
-  //   if (type) {
-  //     localStorage.setItem("type", type);
-  //   }
-
-  //   // ✅ Hide admin menu if not admin
-  //   if (localStorage.getItem("type") !== "admin") {
-  //     const adminMenu = document.getElementById("adminMenu");
-  //     if (adminMenu) {
-  //       adminMenu.style.display = "none";
-  //     }
-  //   }
-  // });
 </script>
     <style>
         .container {
@@ -99,7 +85,6 @@ if (!localStorage.getItem("email")) {
             color: #fff;
             font-weight: 600;
         }
-/* Responsive Styles */
 @media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
@@ -194,7 +179,7 @@ if (!localStorage.getItem("email")) {
       padding: 0;
       box-sizing: border-box;
     }
-    #particles {
+   #particles {
       position: fixed;
       top: 0;
       left: 0;
@@ -342,7 +327,6 @@ if (!localStorage.getItem("email")) {
 nav ul li {
     position: relative;
 }
-
         nav ul li .dropdown-content a {
             color: black;
             padding: 12px 16px;
@@ -359,10 +343,6 @@ nav ul li {
         nav ul li.show .dropdown-content {
   display: block;
 }
-#popup-content{
-    line-height: 30px;
-}
-
 .quotatext {
     color: var(--quotatext);
 }
@@ -391,29 +371,18 @@ color: var(--quotatext1);padding-bottom: 15px;
     <nav class="navbar">
       <img src="/images/logo.png" id="logo">
       <ul class="nav-links">
-        <!-- <li class="dropdown">
-            <a href="#" class="dropbtn">Attendance</a>
+        <li class="dropdown">
+            <a href="#" class="dropbtn">Control</a>
             <div class="dropdown-content">
-                <a href="/viewatten">View Attendance</a>
-                <a href="/markatten">Mark Attendance</a>
+                <a href="/manageitems">Manage Item</a>
+                <a href="/menucontrol">Menu Control</a>
             </div>
-        </li> -->
-        <!-- <div id="adminMenu"> -->
-        <!-- <li class="dropdown" id="adminMenu">
-            <a href="#" class="dropbtn" >Operations</a>
-            <div class="dropdown-content">
-                <a href="/managebus">Manage Bus</a>
-                <a href="/managestu">Manage Students</a>
-                <a href="/manageusers">Manage Users</a>
-                <a href="/excel">Upload/Download</a>
-            </div>
-        </li> -->
-        <!-- </div> -->
+        </li>
         <li><button id="logout-btn">Logout</button></li>
         <li><div class="mode-toggle" id="mode-toggle"><div class="slider">🌙</div></div></li>
       </ul>
       <div class="hamburger" onclick="toggleMenu()">☰</div>
-    </nav>     
+    </nav>   
     <div class="container">
         <div class="quote-box">
             <h2>Message Of The Day</h2><br>
