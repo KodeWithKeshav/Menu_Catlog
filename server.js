@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // MongoDB connection
 mongoose
-  .connect('mongodb+srv://menu:catlog@menu.ypplluk.mongodb.net/Menu', {
+  .connect('YOUR_MONGODB_URL', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
